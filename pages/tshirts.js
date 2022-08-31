@@ -27,10 +27,10 @@ const Tshirts = ({ products }) => {
                     </a>
                     <div className="mt-4 text-center md:text-left">
                       <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                        {products[product].title}
+                        T-Shirts
                       </h3>
                       <h2 className="text-gray-900 title-font text-lg font-medium">
-                        Wear The Code
+                        {products[product].title}
                       </h2>
                       <p className="mt-1">₹{products[product].price}</p>
                       <div className="mt-1">
