@@ -1,40 +1,85 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import mongoose from "mongoose";
+import Product from "../../models/Product";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Slug = ({ addToCart }) => {
+const Slug = ({ addToCart, product, variants, buyNow }) => {
+  console.log(product);
+  console.log(variants);
+
   const router = useRouter();
   const { slug } = router.query;
+
   const [pin, setPin] = useState();
   const [service, setService] = useState();
+  const [color, setColor] = useState(product.color);
+  const [size, setSize] = useState(product.size);
+
   const checkServiceAvailability = async () => {
     let pins = await fetch("http://localhost:3000/api/pincode");
     let pinJson = await pins.json();
     if (pinJson.includes(parseInt(pin))) {
       setService(true);
+      toast.success("Your Pincode is Servicable", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } else {
       setService(false);
+      toast.error("Sorry! Your Pincode is Not Servicable", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
   const onChangePin = (e) => {
     setPin(e.target.value);
   };
+
+  const refreshVariant = (newColor, newSize) => {
+    const url = `http://localhost:3000/product/${variants[newColor][newSize]["slug"]}`;
+    window.location = url;
+  };
   return (
     <>
       <section className="text-gray-600 body-font overflow-hidden">
+        <ToastContainer
+          position="bottom-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <div className="container px-5 py-16 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-wrap">
             <img
               alt="ecommerce"
               className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-top rounded"
-              src="https://m.media-amazon.com/images/I/613k0gYkdZS._UY879_.jpg"
+              src={product.img}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
                 BRAND NAME
               </h2>
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-                The Catcher in the Rye
+                {product.title}({product.size}/{product.color})
               </h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
@@ -134,29 +179,93 @@ const Slug = ({ addToCart }) => {
                   </a>
                 </span>
               </div>
-              <p className="leading-relaxed">
-                Fam locavore kickstarter distillery. Mixtape chillwave tumeric
-                sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo
-                juiceramps cornhole raw denim forage brooklyn. Everyday carry +1
-                seitan poutine tumeric. Gastropub blue bottle austin listicle
-                pour-over, neutra jean shorts keytar banjo tattooed umami
-                cardigan.
-              </p>
+              <p className="leading-relaxed">{product.desc}.</p>
               <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex">
                   <span className="mr-3">Color</span>
-                  <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-                  <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-                  <button className="border-2 border-gray-300 ml-1 bg-pink-500 rounded-full w-6 h-6 focus:outline-none"></button>
+                  {Object.keys(variants).includes("red") &&
+                    Object.keys(variants["red"]).includes(size) && (
+                      <button
+                        onClick={() => {
+                          refreshVariant("red", size);
+                        }}
+                        className={`border-2 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none ${
+                          color === "red" ? "border-black" : "border-gray-300"
+                        }`}
+                      ></button>
+                    )}
+                  {Object.keys(variants).includes("Blue") &&
+                    Object.keys(variants["Blue"]).includes(size) && (
+                      <button
+                        onClick={() => {
+                          refreshVariant("Blue", size);
+                        }}
+                        className={`border-2 ml-1 bg-blue-500 rounded-full w-6 h-6 focus:outline-none ${
+                          color === "Blue" ? "border-black" : "border-gray-300"
+                        }`}
+                      ></button>
+                    )}
+                  {Object.keys(variants).includes("black") &&
+                    Object.keys(variants["black"]).includes(size) && (
+                      <button
+                        onClick={() => {
+                          refreshVariant("black", size);
+                        }}
+                        className={`border-2 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none ${
+                          color === "black" ? "border-black" : "border-gray-300"
+                        }`}
+                      ></button>
+                    )}
+                  {Object.keys(variants).includes("yellow") &&
+                    Object.keys(variants["yellow"]).includes(size) && (
+                      <button
+                        onClick={() => {
+                          refreshVariant("yellow", size);
+                        }}
+                        className={`border-2 ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none ${
+                          color === "yellow"
+                            ? "border-black"
+                            : "border-gray-300"
+                        }`}
+                      ></button>
+                    )}
+                  {Object.keys(variants).includes("green") &&
+                    Object.keys(variants["green"]).includes(size) && (
+                      <button
+                        onClick={() => {
+                          refreshVariant("green", size);
+                        }}
+                        className={`border-2 ml-1 bg-green-500 rounded-full w-6 h-6 focus:outline-none ${
+                          color === "green" ? "border-black" : "border-gray-300"
+                        }`}
+                      ></button>
+                    )}
                 </div>
                 <div className="flex ml-6 items-center">
                   <span className="mr-3">Size</span>
                   <div className="relative">
-                    <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 text-base pl-3 pr-10">
-                      <option>SM</option>
-                      <option>M</option>
-                      <option>L</option>
-                      <option>XL</option>
+                    <select
+                      value={size}
+                      onChange={(e) => {
+                        refreshVariant(color, e.target.value);
+                      }}
+                      lassName="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 text-base pl-3 pr-10"
+                    >
+                      {Object.keys(variants[color]).includes("S") && (
+                        <option value={"S"}>S</option>
+                      )}
+                      {Object.keys(variants[color]).includes("M") && (
+                        <option value={"M"}>M</option>
+                      )}
+                      {Object.keys(variants[color]).includes("L") && (
+                        <option value={"L"}>L</option>
+                      )}
+                      {Object.keys(variants[color]).includes("XL") && (
+                        <option value={"XL"}>XL</option>
+                      )}
+                      {Object.keys(variants[color]).includes("XXL") && (
+                        <option value={"XXL"}>XXL</option>
+                      )}
                     </select>
                     <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                       <svg
@@ -178,7 +287,19 @@ const Slug = ({ addToCart }) => {
                 <span className="title-font font-medium text-2xl text-gray-900">
                   ₹499
                 </span>
-                <button className="flex ml-4 text-white bg-pink-500 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded">
+                <button
+                  onClick={() => {
+                    buyNow(
+                      slug,
+                      1,
+                      499,
+                      product.title,
+                      product.size,
+                      product.color
+                    );
+                  }}
+                  className="flex ml-4 text-white bg-pink-500 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded"
+                >
                   Buy Now
                 </button>
                 <button
@@ -187,9 +308,9 @@ const Slug = ({ addToCart }) => {
                       slug,
                       1,
                       499,
-                      "Wear The Code(X, Red)",
-                      "XL",
-                      "Red"
+                      product.title,
+                      product.size,
+                      product.color
                     );
                   }}
                   className="flex ml-4 text-white bg-pink-500 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded"
@@ -240,4 +361,27 @@ const Slug = ({ addToCart }) => {
   );
 };
 
+export async function getServerSideProps(context) {
+  if (!mongoose.connections[0].readyState) {
+    await mongoose.connect(process.env.MONGO_URI);
+  }
+  let product = await Product.findOne({ slug: context.query.slug });
+  let variants = await Product.find({ title: product.title });
+  let colorSizeSlug = {};
+  for (let item of variants) {
+    if (Object.keys(colorSizeSlug).includes(item.color)) {
+      colorSizeSlug[item.color][item.size] = { slug: item.slug };
+    } else {
+      colorSizeSlug[item.color] = {};
+      colorSizeSlug[item.color][item.size] = { slug: item.slug };
+    }
+  }
+
+  return {
+    props: {
+      product: JSON.parse(JSON.stringify(product)),
+      variants: JSON.parse(JSON.stringify(colorSizeSlug)),
+    },
+  };
+}
 export default Slug;
