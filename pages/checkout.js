@@ -2,10 +2,67 @@ import React from "react";
 import Link from "next/link";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import { BsFillBagCheckFill } from "react-icons/bs";
+import Head from "next/head";
+import Script from "next/script";
 
 const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
+  // const initiatePayment = async () => {
+  //   let txnToken;
+  //   let amount;
+  //   let oid = Math.floor(Math.random() * Date.now())
+  //   // Get a transaction token
+  //   const data = { cart, subTotal, oid};
+  //   let a = fetch(`${NEXT_PUBLIC_HOST}/api/pretransaction`, {
+  //     method : "POST",
+  //     headers : {
+  //       'Content-Type' : 'application/json'
+  //     },
+  //     body : JSON.stringify(data)
+  //   })
+  //   let b = await a.json()
+  //   console.log(b);
+  //   var config = {
+  //     "root": "",
+  //     "flow": "DEFAULT",
+  //     "data": {
+  //     "orderId": oid, /* update order id */
+  //     "token": txnToken, /* update token value */
+  //     "tokenType": "TXN_TOKEN",
+  //     "amount": amount /* update amount */
+  //     },
+  //     "handler": {
+  //     "notifyMerchant": function(eventName,data){
+  //     console.log("notifyMerchant handler function called");
+  //     console.log("eventName => ",eventName);
+  //     console.log("data => ",data);
+  //     }
+  //     }
+  //     };
+     
+  //     // initialze configuration using init method
+  //     window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+  //     // after successfully updating configuration, invoke JS Checkout
+  //     window.Paytm.CheckoutJS.invoke();
+  //     }).catch(function onError(error){
+  //     console.log("error => ",error);
+  //     });
+     
+  // }
   return (
     <div className="container px-2 sm:m-auto ">
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"
+        />
+      </Head>
+      <Script
+        type="application/javascript"
+        src={`${process.env.PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.PAYTM_MID}.js`}
+        onload="onScriptLoad();"
+        crossorigin="anonymous"
+      ></Script>
+     
       <h1 className="font-bold text-3xl my-8 text-center">Checkout</h1>
       <h2 className="font-bold text-xl">1. Delivery Details</h2>
       <div className="mx-auto flex my-4">
