@@ -1,16 +1,26 @@
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import LoadingBar from 'react-top-loading-bar'
+
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
   const [cart, setCart] = useState({});
   const [subTotal, setSubTotal] = useState(0);
-
+  const [user, setUser] = useState({ value : null})
+  const [key, setKey] = useState(0)
+  const [progress, setProgress] = useState(0)
   const router = useRouter();
+
   useEffect(() => {
-    console.log("Hello From _app.js");
+    router.events.on('routeChangeStart', () => {
+      setProgress(40);
+    })
+    router.events.on('routeChangeComplete', () => {
+      setProgress(100);
+    })
     try {
       if (localStorage.getItem("cart")) {
         setCart(JSON.parse(localStorage.getItem("cart")));
@@ -20,11 +30,22 @@ function MyApp({ Component, pageProps }) {
       console.error(error);
       localStorage.clear();
     }
-  }, []);
+    const token = localStorage.getItem('token')
+    if(token){
+      setUser({ value : token})
+      setKey(Math.random())
+    }
+  }, [router.query]);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser({ value : null});
+    setKey(Math.random());
+  }
   // save items into the localstorage
   const saveCart = (myCart) => {
     if (myCart !== undefined) {
-      console.log(myCart);
+      // console.log(myCart);
       localStorage.setItem("cart", JSON.stringify(myCart));
       // calculatin subTotal of items
       let subt = 0;
@@ -72,7 +93,7 @@ function MyApp({ Component, pageProps }) {
       delete newCart[itemCode];
     }
     setCart(newCart);
-    saveCart();
+    saveCart(newCart);
   };
 
   // function for clear cart items
@@ -83,9 +104,17 @@ function MyApp({ Component, pageProps }) {
   };
   return (
     <>
+    <LoadingBar
+        color='#f72585'
+        progress={progress}
+        waitingTime={400}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Navbar
-        key={subTotal}
+        key={key}
+        user={user}
         cart={cart}
+        logout={logout}
         addToCart={addToCart}
         removeFromCart={removeFromCart}
         clearCart={clearCart}

@@ -11,6 +11,7 @@ const Slug = ({ addToCart, product, variants, buyNow }) => {
 
   const router = useRouter();
   const { slug } = router.query;
+  console.log(slug)
 
   const [pin, setPin] = useState();
   const [service, setService] = useState();

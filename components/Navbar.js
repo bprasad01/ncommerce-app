@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   AiFillCloseCircle,
   AiFillMinusCircle,
@@ -10,7 +10,8 @@ import {
 import { BsFillBagCheckFill } from "react-icons/bs";
 import { MdAccountCircle } from "react-icons/md";
 
-const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
+const Navbar = ({ user, cart, addToCart, removeFromCart, clearCart, subTotal, logout }) => {
+  const [dropDown, setDropDown] = useState(false)
   const ref = useRef();
 
   const toggleCart = () => {
@@ -22,9 +23,11 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
       ref.current.classList.add("translate-x-full");
     }
   };
+
+ 
   return (
     <div className="flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-xl sticky top-0 bg-white z-10">
-      <div className="logo mx-5">
+      <div className="logo mr-auto md:mx-5">
         <Link href={"/"}>
           <a>
             <Image src="/logo.png" alt="logo" width={200} height={40} />
@@ -43,11 +46,12 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
               <li>Hoodies</li>
             </a>
           </Link>
+          
           <Link href={"/mugs"}>
             <a>
               <li>Mugs</li>
             </a>
-          </Link>
+            </Link>
           <Link href={"/stickers"}>
             <a>
               <li>Stickers</li>
@@ -55,12 +59,22 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
           </Link>
         </ul>
       </div>
-      <div className="cart absolute right-0 top-6 mx-5 cursor-pointer flex">
-        <Link href={"/login"}>
+      <div className="cart items-center absolute right-0 top-4 mx-5 cursor-pointer flex">
+        <a onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)}>
+        {dropDown &&  <div onMouseOver={() => setDropDown(true)} onMouseLeave={() => setDropDown(false)} className="absolute py-4 right-8 bg-pink-300 top-7 rounded-md px-5 w-36">
+          <ul>
+            <Link href={'/myaccount'}><a><li className="py-1 text-sm hover:text-pink-800 text-bold">My Account</li></a></Link>
+            <Link href={'/orders'}><a><li className="py-1 text-sm hover:text-pink-800 text-bold">Order</li></a></Link>
+            <li onClick={logout} className="py-1 text-sm hover:text-pink-800 text-bold">LogOut</li>
+          </ul>
+        </div>}
+      {user.value && <MdAccountCircle className="text-xl md:text-2xl mx-2"  />}
+      </a>
+        {!user.value && <Link href={"/login"}>
           <a>
-            <MdAccountCircle className="text-xl md:text-2xl mx-2" />
+            <button className="bg-pink-500 px-2 py-1 rounded-md text-sm text-white mx-2">Login</button>
           </a>
-        </Link>
+        </Link>}
         <AiOutlineShoppingCart
           onClick={toggleCart}
           className="text-xl md:text-2xl"
