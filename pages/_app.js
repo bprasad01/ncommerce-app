@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }) {
   const [cart, setCart] = useState({});
   const [subTotal, setSubTotal] = useState(0);
   const [user, setUser] = useState({ value : null})
-  const [key, setKey] = useState(0)
+  const [key, setKey] = useState()
   const [progress, setProgress] = useState(0)
   const router = useRouter();
 
@@ -112,7 +112,7 @@ function MyApp({ Component, pageProps }) {
         waitingTime={400}
         onLoaderFinished={() => setProgress(0)}
       />
-      <Navbar
+      {key && <Navbar
         key={key}
         user={user}
         cart={cart}
@@ -122,7 +122,7 @@ function MyApp({ Component, pageProps }) {
         clearCart={clearCart}
         subTotal={subTotal}
         buyNow={buyNow}
-      />
+      />}
       <Component
         cart={cart}
         addToCart={addToCart}
