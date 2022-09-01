@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
+import mongoose from "mongoose";
+import Order from "../models/Order";
+import { useRouter } from 'next/router'
 
 const Orders = () => {
+    
+    const router = useRouter();
+    useEffect(() => {
+        if(!localStorage.getItem('token')){
+          router.push('/')
+        }
+      }, [])
   return (
     <div>
-      <div classNameName="container mx-auto bg-slate-400">
-        <h1 classNameName="font-bold text-xl">My Orders</h1>
+      <div className="container mx-auto ">
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
               <div className="overflow-hidden">
+        <h1 className="font-bold text-xl p-8">My Orders</h1>
                 <table className="min-w-full">
                   <thead className="border-b">
                     <tr>
@@ -92,4 +102,17 @@ const Orders = () => {
   );
 };
 
+export async function getServerSideProps(context) {
+    if (!mongoose.connections[0].readyState) {
+      await mongoose.connect(process.env.MONGO_URI);
+    }
+    let orders = await Order.findOne({});
+    
+  
+    return {
+      props: {orders : orders
+        
+      },
+    };
+  }
 export default Orders;

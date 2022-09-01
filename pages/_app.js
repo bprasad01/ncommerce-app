@@ -37,10 +37,12 @@ function MyApp({ Component, pageProps }) {
     }
   }, [router.query]);
 
+  // function for logout
   const logout = () => {
     localStorage.removeItem('token');
     setUser({ value : null});
     setKey(Math.random());
+    router.push('/');
   }
   // save items into the localstorage
   const saveCart = (myCart) => {
