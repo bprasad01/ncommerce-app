@@ -67,8 +67,8 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
       <h2 className="font-bold text-xl">1. Delivery Details</h2>
       <div className="mx-auto flex my-4">
         <div className="px-2 w-1/2">
-          <div class=" mb-4">
-            <label htmlFor="email" class="leading-7 text-sm text-gray-600">
+          <div className=" mb-4">
+            <label htmlFor="email" className="leading-7 text-sm text-gray-600">
               Email
             </label>
             <input
@@ -80,8 +80,8 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
           </div>
         </div>
         <div className="px-2 w-1/2">
-          <div class=" mb-4">
-            <label htmlFor="name" class="leading-7 text-sm text-gray-600">
+          <div className=" mb-4">
+            <label htmlFor="name" className="leading-7 text-sm text-gray-600">
               Name
             </label>
             <input
@@ -94,8 +94,8 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
         </div>
       </div>
       <div className="px-2 w-full">
-        <div class=" mb-4">
-          <label htmlFor="address" class="leading-7 text-sm text-gray-600">
+        <div className=" mb-4">
+          <label htmlFor="address" className="leading-7 text-sm text-gray-600">
             Name
           </label>
           <textarea
@@ -108,8 +108,8 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
       </div>
       <div className="mx-auto flex my-4">
         <div className="px-2 w-1/2">
-          <div class=" mb-4">
-            <label htmlFor="phone" class="leading-7 text-sm text-gray-600">
+          <div className=" mb-4">
+            <label htmlFor="phone" className="leading-7 text-sm text-gray-600">
               Phone
             </label>
             <input
@@ -121,8 +121,8 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
           </div>
         </div>
         <div className="px-2 w-1/2">
-          <div class=" mb-4">
-            <label htmlFor="city" class="leading-7 text-sm text-gray-600">
+          <div className=" mb-4">
+            <label htmlFor="city" className="leading-7 text-sm text-gray-600">
               City
             </label>
             <input
@@ -136,8 +136,8 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
       </div>
       <div className="mx-auto flex my-4">
         <div className="px-2 w-1/2">
-          <div class=" mb-4">
-            <label htmlFor="state" class="leading-7 text-sm text-gray-600">
+          <div className=" mb-4">
+            <label htmlFor="state" className="leading-7 text-sm text-gray-600">
               State
             </label>
             <input
@@ -149,8 +149,8 @@ const Checkout = ({ cart, subTotal, addToCart, removeFromCart }) => {
           </div>
         </div>
         <div className="px-2 w-1/2">
-          <div class=" mb-4">
-            <label htmlFor="pincode" class="leading-7 text-sm text-gray-600">
+          <div className=" mb-4">
+            <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">
               Pincode
             </label>
             <input
